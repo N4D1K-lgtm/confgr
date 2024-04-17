@@ -1,0 +1,10 @@
+[package]
+description = "A core collection of traits implemented by the autoconf derive macro"
+name = "autoconf_core"
+readme.workspace = true
+license.workspace = true
+authors.workspace = true
+version.workspace = true
+edition.workspace = true
+repository.workspace = true
+homepage.workspace = true

@@ -1,0 +1,37 @@
+[package]
+name = "autoconf"
+version = "0.1.0"
+edition = "2021"
+description = "A simple and powerful derive macro for loading configuration structs from various sources"
+license = "MIT"
+repository = "https://github.com/N4D1K-lgtm/autoconf"
+authors = ["Kidan Nelson <nelsonkidan@gmail.com>"]
+documentation = "https://docs.rs/autoconf"
+readme = "README.md"
+keywords = ["configuration", "settings", "environment", "config"]
+categories = ["configuration", "development-tools", "proc-macro"]
+homepage = "https://github.com/yourusername/autoconf"
+
+[dependencies]
+autoconf_derive = { path = "crates/autoconf_derive", version = "0.1.0" }
+autoconf_core = { path = "crates/autoconf_core", version = "0.1.0" }
+
+
+[dev-dependencies]
+serde = { version = "1.0.198", features = ["derive"] }
+dotenv = "0.15.0"
+config = { version = "0.14.0", features = ["toml"] }
+smart-default = "0.7.1"
+
+[workspace]
+members = ["crates/*"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+repository = "https://github.com/N4D1K-lgtm/autoconf"
+authors = ["Kidan Nelson <nelsonkidan@gmail.com>"]
+documentation = "https://docs.rs/autoconf"
+readme = "README.md"
+homepage = "https://github.com/N4D1K-lgtm/autoconf"
