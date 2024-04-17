@@ -1,0 +1,37 @@
+[package]
+description = "A simple rust application configuration derive macro."
+name = "confgr"
+version = "0.1.1"
+edition = "2021"
+license = "MIT"
+repository = "https://github.com/N4D1K-lgtm/confgr"
+authors = ["Kidan Nelson <nelsonkidan@gmail.com>"]
+documentation = "https://docs.rs/confgr"
+readme = "README.md"
+keywords = ["configuration", "settings", "environment", "config"]
+categories = ["config", "rust-patterns", "development-tools"]
+homepage = "https://github.com/N4D1K-lgtm/confgr"
+
+[dependencies]
+confgr_derive = { path = "crates/confgr_derive", version = "0.1.1" }
+confgr_core = { path = "crates/confgr_core", version = "0.1.1" }
+
+
+[dev-dependencies]
+serde = { version = "1.0.198", features = ["derive"] }
+dotenv = "0.15.0"
+config = { version = "0.14.0", features = ["toml"] }
+smart-default = "0.7.1"
+
+[workspace]
+members = ["crates/*"]
+
+[workspace.package]
+version = "0.1.1"
+edition = "2021"
+license = "MIT"
+repository = "https://github.com/N4D1K-lgtm/confgr"
+authors = ["Kidan Nelson <nelsonkidan@gmail.com>"]
+documentation = "https://docs.rs/confgr"
+readme = "README.md"
+homepage = "https://github.com/N4D1K-lgtm/confgr"
