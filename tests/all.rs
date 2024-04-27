@@ -1,4 +1,4 @@
-use autoconf::prelude::*;
+use confgr::prelude::*;
 use smart_default::SmartDefault;
 
 #[derive(Config, Clone, SmartDefault)]

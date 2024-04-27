@@ -1,7 +1,7 @@
-<h1 align="center">Autoconf</h1>
+<h1 align="center">Confgr</h1>
 <div align="center">
  <strong>
-  A simple rust application configuration macro.
+  A simple rust application configuration derive macro.
  </strong>
 </div>
 
@@ -9,18 +9,18 @@
 
 <div align="center">
   <!-- Github Actions -->
-  <a href="https://github.com/N4D1K-lgtm/autoconf/actions/workflows/rust.yml?query=branch%3Amaster">
-    <img src="https://img.shields.io/github/actions/workflow/status/N4D1K-lgtm/autoconf/rust.yml?branch=master&style=flat-square" alt="actions status" /></a>
+  <a href="https://github.com/N4D1K-lgtm/confgr/actions/workflows/rust.yml?query=branch%3Amaster">
+    <img src="https://img.shields.io/github/actions/workflow/status/N4D1K-lgtm/confgr/rust.yml?branch=master&style=flat-square" alt="actions status" /></a>
   <!-- Version -->
-  <a href="https://crates.io/crates/sqlx">
-    <img src="https://img.shields.io/crates/v/autoconf.svg?style=flat-square"
+  <a href="https://crates.io/crates/confgr">
+    <img src="https://img.shields.io/crates/v/confgr.svg?style=flat-square"
     alt="Crates.io version" /></a>
   <!-- Docs -->
-  <a href="https://docs.rs/autoconf">
+  <a href="https://docs.rs/confgr">
   <img src="https://img.shields.io/badge/docs-latest-blue.svg?style=flat-square" alt="docs.rs docs" /></a>
   <!-- Downloads -->
-  <a href="https://crates.io/crates/autoconf">
-    <img src="https://img.shields.io/crates/d/autoconf.svg?style=flat-square" alt="Download" />
+  <a href="https://crates.io/crates/confgr">
+    <img src="https://img.shields.io/crates/d/confgr.svg?style=flat-square" alt="Download" />
   </a>
 </div>
 
@@ -34,7 +34,7 @@
       Usage
     </a>
     <span> | </span>
-    <a href="#consideration">
+    <a href="#considerations">
       Considerations
     </a>
   </h4>
@@ -43,12 +43,14 @@
 <br />
 
 <div align="center">
-  <small>Built with :heart: by Kidan Nelson</small>
+  <small>Built with ❤️ by Kidan Nelson</small>
 </div>
 
 ## Overview
 
-[`autoconf`](https://docs.rs/autoconf/latest/autoconf) is a crate that enables easily managing rust application configuration by automatically deriving functionality to load settings from environment variables, configuration files, and default values. This is done by procedurally parsing struct fields to build environment variable keys as well as deserialization using [`serde`](https://docs.rs/serde/latest/serde/) from a provided config file path. Functionality is customizable through several macro attribute helpers.
+[`confgr`](https://docs.rs/confgr/latest/confgr) is a crate that enables easily managing rust application configuration by automatically deriving functionality to load settings from environment variables, configuration files, and default values. This is done by procedurally parsing struct fields to build environment variable keys as well as deserialization using [`serde`](https://docs.rs/serde/latest/serde/) from a provided config file path. Functionality is customizable through several macro attribute helpers.
+
+The order of priority is Environment Variable -> Config File -> Default Value. If a `config(path = "filepath")` attribute is not present, a config file will not be loaded, and `config(skip)` may be used to skip the environment variable step.
 
 | Attribute      | Functionality                                                                                                                              |
 |----------------|--------------------------------------------------------------------------------------------------------------------------------------------|
@@ -70,7 +72,7 @@
 Here's a complete example with all the currently implemented attributes. First define a configuration struct that the derive macro will fill from specified sources:
 
 ```rust
-use autoconf::prelude::*;
+use confgr::prelude::*;
 use smart_default::SmartDefault;
 
 #[derive(Config, Clone, SmartDefault)]

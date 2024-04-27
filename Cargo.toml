@@ -1,20 +1,20 @@
 [package]
-name = "autoconf"
-version = "0.1.0"
+description = "A simple rust application configuration derive macro."
+name = "confgr"
+version = "0.1.1"
 edition = "2021"
-description = "A simple and powerful derive macro for loading configuration structs from various sources"
 license = "MIT"
-repository = "https://github.com/N4D1K-lgtm/autoconf"
+repository = "https://github.com/N4D1K-lgtm/confgr"
 authors = ["Kidan Nelson <nelsonkidan@gmail.com>"]
-documentation = "https://docs.rs/autoconf"
+documentation = "https://docs.rs/confgr"
 readme = "README.md"
 keywords = ["configuration", "settings", "environment", "config"]
-categories = ["configuration", "development-tools", "proc-macro"]
-homepage = "https://github.com/yourusername/autoconf"
+categories = ["config", "rust-patterns", "development-tools"]
+homepage = "https://github.com/N4D1K-lgtm/confgr"
 
 [dependencies]
-autoconf_derive = { path = "crates/autoconf_derive", version = "0.1.0" }
-autoconf_core = { path = "crates/autoconf_core", version = "0.1.0" }
+confgr_derive = { path = "crates/confgr_derive", version = "0.1.1" }
+confgr_core = { path = "crates/confgr_core", version = "0.1.1" }
 
 
 [dev-dependencies]
@@ -27,11 +27,11 @@ smart-default = "0.7.1"
 members = ["crates/*"]
 
 [workspace.package]
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 license = "MIT"
-repository = "https://github.com/N4D1K-lgtm/autoconf"
+repository = "https://github.com/N4D1K-lgtm/confgr"
 authors = ["Kidan Nelson <nelsonkidan@gmail.com>"]
-documentation = "https://docs.rs/autoconf"
+documentation = "https://docs.rs/confgr"
 readme = "README.md"
-homepage = "https://github.com/N4D1K-lgtm/autoconf"
+homepage = "https://github.com/N4D1K-lgtm/confgr"

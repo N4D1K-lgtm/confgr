@@ -42,7 +42,7 @@ pub fn generate_layer(
         }
     }
 
-            impl ::autoconf_core::Merge for #layer_name {
+            impl ::confgr_core::Merge for #layer_name {
                 fn merge(self, other: Self) -> Self {
                     Self {
                         #( #merges ),*
@@ -50,7 +50,7 @@ pub fn generate_layer(
                 }
             }
 
-            impl ::autoconf_core::Empty for #layer_name {
+            impl ::confgr_core::Empty for #layer_name {
                 fn empty() -> Self {
                 Self {
                     #( #empty_defs ),*

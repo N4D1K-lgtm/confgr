@@ -10,7 +10,7 @@ mod env;
 mod file;
 mod merge;
 
-const SUFFIX: &str = "AutoConf";
+const SUFFIX: &str = "ConfgrLayer";
 const AUTOCONF_ATTRIBUTE: &str = "config";
 const PATH_ATTRIBUTE: &str = "path";
 const KEY_ATTRIBUTE: &str = "key";

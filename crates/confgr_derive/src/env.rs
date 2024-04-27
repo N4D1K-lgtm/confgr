@@ -70,7 +70,7 @@ pub fn generate_from_env(
     });
 
     quote! {
-        impl ::autoconf_core::FromEnv for #layer_name {
+        impl ::confgr_core::FromEnv for #layer_name {
             fn from_env() -> Self {
                 Self {
                     #( #env_items ),*

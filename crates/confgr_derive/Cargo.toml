@@ -1,6 +1,6 @@
 [package]
-name = "autoconf_derive"
-description = "Procedural derive macro implementation for the autoconf crate"
+name = "confgr_derive"
+description = "Procedural derive macro implementation for the confgr crate"
 readme.workspace = true
 authors.workspace = true
 version.workspace = true
@@ -19,4 +19,4 @@ serde = { version = "1.0.198", features = ["derive"] }
 syn = { version = "2.0.60", features = ["full"] }
 config = { version = "0.14.0", features = ["toml"] }
 quote = "1.0"
-autoconf_core = { path = "../autoconf_core/", version = "0.1.0" }
+confgr_core = { path = "../confgr_core/", version = "0.1.1" }

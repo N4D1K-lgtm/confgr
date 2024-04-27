@@ -14,34 +14,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "autoconf"
-version = "0.1.0"
-dependencies = [
- "autoconf_core",
- "autoconf_derive",
- "config",
- "dotenv",
- "serde",
- "smart-default",
-]
-
-[[package]]
-name = "autoconf_core"
-version = "0.1.0"
-
-[[package]]
-name = "autoconf_derive"
-version = "0.1.0"
-dependencies = [
- "autoconf_core",
- "config",
- "proc-macro2",
- "quote",
- "serde",
- "syn",
-]
-
-[[package]]
 name = "base64"
 version = "0.21.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -70,6 +42,34 @@ name = "cfg-if"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
+
+[[package]]
+name = "confgr"
+version = "0.1.1"
+dependencies = [
+ "confgr_core",
+ "confgr_derive",
+ "config",
+ "dotenv",
+ "serde",
+ "smart-default",
+]
+
+[[package]]
+name = "confgr_core"
+version = "0.1.1"
+
+[[package]]
+name = "confgr_derive"
+version = "0.1.1"
+dependencies = [
+ "confgr_core",
+ "config",
+ "proc-macro2",
+ "quote",
+ "serde",
+ "syn",
+]
 
 [[package]]
 name = "config"
@@ -345,9 +345,9 @@ dependencies = [
 
 [[package]]
 name = "proc-macro2"
-version = "1.0.79"
+version = "1.0.81"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e835ff2298f5721608eb1a980ecaee1aef2c132bf95ecc026a11b7bf3c01c02e"
+checksum = "3d1597b0c024618f09a9c3b8655b7e430397a36d23fdafec26d6965e9eec3eba"
 dependencies = [
  "unicode-ident",
 ]
@@ -453,9 +453,9 @@ dependencies = [
 
 [[package]]
 name = "syn"
-version = "2.0.58"
+version = "2.0.60"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "44cfb93f38070beee36b3fef7d4f5a16f27751d94b187b666a5cc5e9b0d30687"
+checksum = "909518bc7b1c9b779f1bbf07f2929d35af9f0f37e47c6e9ef7f9dddc1e1821f3"
 dependencies = [
  "proc-macro2",
  "quote",
