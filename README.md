@@ -69,48 +69,25 @@ The order of priority is Environment Variable -> Config File -> Default Value. I
 - **Integration**: Integrates conveniently with other macros such as [`smart_default`](https://docs.rs/smart-default/latest/smart_default/derive.SmartDefault.html).
 ## Usage
 
-Here's a complete example with all the currently implemented attributes. First define a configuration struct that the derive macro will fill from specified sources:
-
+The simplest way to use `confgr` is as follows: 
 ```rust
 use confgr::prelude::*;
-use smart_default::SmartDefault;
 
-#[derive(Config, Clone, SmartDefault)]
-#[config(prefix = "PREFIX", path = "tests/config")]
-pub struct Test {
-    #[config(key = "CUSTOM_KEY")]
-    #[default = "World"]
-    name: String,
-    #[config(prefix = "APP")]
-    #[default = 3]
-    id: i32,
-    #[config(nest)]
-    nested: Nested,
-    #[config(key = "TIMEOUT_MS")]
-    #[default = 1000]
-    timeout: u64,
-    #[config(key = "FEATURE_ENABLED")]
-    #[default = false]
-    feature_enabled: bool,
-    #[default = 1.5]
-    ratio: f64,
-    #[config(nest)]
-    metadata: Metadata,
-    #[config(skip)]
-    #[default(Some("Unused".to_string()))]
-    unused_field: Option<String>,
+#[derive(Config)]
+#[config(path = "config.toml")]
+pub struct AppConfig {
+  port: u32,
+  address: String,
 }
 
-#[derive(Config, Default, Clone)]
-pub struct Nested {
-    name: String,
-}
-
-#[derive(Config, Default, Clone)]
-#[config(prefix = "META", separator = "__")]
-pub struct Metadata {
-    description: String,
-    version: i32,
+// Default implementations are required.
+impl Default for AppConfig {
+  fn default() -> Self {
+    Self {
+      port: 3000,
+      address: "127.0.0.1".to_string(),
+    }
+  }
 }
 ```
 
@@ -118,7 +95,13 @@ Then you can load your settings like so:
 
 ```rust
 fn main() {
-   let settings = Test::config();
+  std::env::set_var("PORT", "4000");
+
+  // AppConfig {
+  //  port: 4000,
+  //  address: "127.0.0.1"
+  // }
+  let settings = AppConfig::load_config();
 }
 ```
 

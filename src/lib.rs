@@ -12,5 +12,5 @@ pub mod config {
 
 pub mod prelude {
     pub use crate::core::{Empty, FromEnv, FromFile, Load, Merge};
-    pub use crate::derive::Confgr;
+    pub use crate::derive::Config;
 }

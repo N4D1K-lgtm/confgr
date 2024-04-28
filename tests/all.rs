@@ -1,56 +1,185 @@
 use confgr::prelude::*;
-use smart_default::SmartDefault;
+use std::env::{remove_var, set_var};
 
-#[derive(Confgr, Clone, SmartDefault)]
-#[config(prefix = "PREFIX", path = "tests/config")]
-pub struct Test {
+#[derive(Config)]
+#[config(prefix = "PRIORITY")]
+pub struct TestPriority {
     #[config(key = "CUSTOM_KEY")]
-    #[default = "World"]
-    name: String,
-    #[config(prefix = "APP")]
-    #[default = 3]
-    id: i32,
-    #[config(nest)]
-    nested: Nested,
-    #[config(key = "TIMEOUT_MS")]
-    #[default = 1000]
-    timeout: u64,
-    #[config(key = "FEATURE_ENABLED")]
-    #[default = false]
-    feature_enabled: bool,
-    #[default = 1.5]
-    ratio: f64,
-    #[config(nest)]
-    metadata: Metadata,
+    pub name: String,
+    pub id: i32,
+    pub timeout: u64,
+}
+
+impl Default for TestPriority {
+    fn default() -> Self {
+        Self {
+            name: "DefaultName".to_string(),
+            id: 1,
+            timeout: 100,
+        }
+    }
+}
+
+#[derive(Config, Default)]
+#[config(path = "tests/config.json", prefix = "PRIORITY")]
+pub struct JsonTestPriority {
+    #[config(key = "CUSTOM_KEY")]
+    pub name: String,
+    pub id: i32,
+    pub timeout: u64,
+}
+
+#[derive(Config, Default)]
+#[config(path = "tests/config.toml", prefix = "PRIORITY")]
+pub struct TomlTestPriority {
+    #[config(key = "CUSTOM_KEY")]
+    pub name: String,
+    pub id: i32,
+    pub timeout: u64,
+}
+
+#[derive(Config, Default)]
+#[config(prefix = "TEST")]
+pub struct SeperatorTest {
+    #[config(separator = "__")]
+    pub name: String,
+}
+
+#[derive(Config, Default)]
+#[config(prefix = "TEST")]
+pub struct SkipTest {
+    pub id: i32,
     #[config(skip)]
-    #[default(Some("Unused".to_string()))]
-    unused_field: Option<String>,
+    pub ignored: bool,
 }
 
-#[derive(Confgr, Default, Clone)]
+#[derive(Config, Default)]
+#[config(prefix = "TEST_NESTED")]
 pub struct Nested {
-    name: String,
+    pub detail: String,
 }
 
-#[derive(Confgr, Default, Clone)]
-#[config(prefix = "META", separator = "__")]
-pub struct Metadata {
-    description: String,
-    version: i32,
+#[derive(Config, Default)]
+#[config(prefix = "TEST")]
+pub struct NestedTest {
+    pub id: i32,
+    #[config(nest)]
+    pub nested: Nested,
 }
 
-#[test]
-fn main() {
-    dotenv::from_path("tests/test.env").ok();
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::fs::File;
+    use std::io::Write;
 
-    let config = Test::load_config();
+    fn setup_env_vars() {
+        set_var("CUSTOM_KEY", "EnvName");
+        set_var("PRIORITY_ID", "20");
+        set_var("PRIORITY_TIMEOUT", "300");
+    }
 
-    assert_eq!(config.name, "World");
-    assert_eq!(config.id, 10);
-    assert_eq!(config.timeout, 2000);
-    assert!(config.feature_enabled);
-    assert_eq!(config.ratio, 2.5);
-    assert_eq!(config.metadata.description, "Example Metadata");
-    assert_eq!(config.metadata.version, 1);
-    assert_eq!(config.nested.name, "Nested From Toml");
+    fn cleanup_env_vars() {
+        remove_var("CUSTOM_KEY");
+        remove_var("PRIORITY_ID");
+        remove_var("PRIORITY_TIMEOUT");
+    }
+
+    fn create_config_file(data: &str, file_path: &str) {
+        let mut file = File::create(file_path).unwrap();
+        writeln!(file, "{}", data).unwrap();
+    }
+
+    #[test]
+    fn test_env_over_config_file_and_default() {
+        setup_env_vars();
+        let config = TestPriority::load_config();
+        assert_eq!(config.name, "EnvName");
+        assert_eq!(config.id, 20);
+        assert_eq!(config.timeout, 300);
+        cleanup_env_vars();
+    }
+
+    #[test]
+    fn test_config_file_over_default_toml() {
+        cleanup_env_vars();
+        let toml_data = r#"
+            name = "TomlName"
+            id = 30
+            timeout = 400
+        "#;
+        create_config_file(toml_data, "tests/config.toml");
+
+        let config = TomlTestPriority::load_config();
+        assert_eq!(config.name, "TomlName");
+        assert_eq!(config.id, 30);
+        assert_eq!(config.timeout, 400);
+
+        std::fs::remove_file("tests/config.toml").unwrap();
+    }
+
+    #[test]
+    fn test_config_file_over_default_config_file_and_json() {
+        cleanup_env_vars();
+        let json_data = r#"
+            {
+                "name": "JsonName",
+                "id": 40,
+                "timeout": 500
+            }
+        "#;
+        create_config_file(json_data, "tests/config.json");
+
+        let config = JsonTestPriority::load_config();
+        assert_eq!(config.name, "JsonName");
+        assert_eq!(config.id, 40);
+        assert_eq!(config.timeout, 500);
+
+        std::fs::remove_file("tests/config.json").unwrap();
+    }
+
+    #[test]
+    fn test_default_values() {
+        let config = TestPriority::default();
+        assert_eq!(config.name, "DefaultName");
+        assert_eq!(config.id, 1);
+        assert_eq!(config.timeout, 100);
+    }
+
+    #[test]
+    fn test_custom_separator() {
+        set_var("TEST__NAME", "SeparatedValue");
+        let config = SeperatorTest::load_config();
+        assert_eq!(config.name, "SeparatedValue");
+        remove_var("TEST__NAME");
+    }
+
+    #[test]
+    fn test_skip_attribute() {
+        set_var("TEST_ID", "10");
+        set_var("TEST_IGNORED", "true");
+        let config = SkipTest::load_config();
+        assert_eq!(config.id, 10);
+        assert!(!config.ignored);
+        remove_var("TEST_ID");
+        remove_var("TEST_IGNORED");
+    }
+
+    #[test]
+    fn test_nested_config() {
+        set_var("TEST_ID", "20");
+        set_var("TEST_NESTED_DETAIL", "NestedDetail");
+        let config = NestedTest::load_config();
+        assert_eq!(config.id, 20);
+        assert_eq!(config.nested.detail, "NestedDetail");
+        remove_var("TEST_ID");
+        remove_var("TEST_NESTED_DETAIL");
+    }
+
+    #[test]
+    fn test_default_values_for_nested() {
+        let config = NestedTest::default();
+        assert_eq!(config.id, 0);
+        assert_eq!(config.nested.detail, "");
+    }
 }

@@ -20,7 +20,7 @@ const NEST_ATTRIBUTE: &str = "nest";
 const SKIP_ATTRIBUTE: &str = "skip";
 const SECRET_ATTRIBUTE: &str = "secret";
 
-#[proc_macro_derive(Confgr, attributes(config))]
+#[proc_macro_derive(Config, attributes(config))]
 pub fn config_derive(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
     let ast = parse_macro_input!(input as DeriveInput);
     match impl_config_derive(&ast) {
