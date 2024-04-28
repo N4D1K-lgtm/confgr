@@ -5,7 +5,7 @@ use syn::Ident;
 
 pub(crate) fn generate_from_file(name: &Ident, attributes: &ConfigAttributes) -> TokenStream {
     let layer_name = format_ident!("{}{}", name, SUFFIX);
-    let file_path = attributes.path.clone();
+    let file_path = attributes.path.clone().unwrap_or_default().clone();
 
     quote! {
 

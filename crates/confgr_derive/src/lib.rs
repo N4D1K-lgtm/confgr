@@ -37,7 +37,7 @@ fn impl_config_derive(ast: &DeriveInput) -> Result<proc_macro2::TokenStream, Vec
     let field_data = extract_fields(ast)?;
 
     let layer_impl = merge::generate_layer(name, &field_data);
-    let config_impl = config::generate_config_impl(name);
+    let config_impl = config::generate_config_impl(name, &struct_attributes);
     let from_impl = convert::generate_conversion_impl(name, &field_data);
     let env_impl = env::generate_from_env(name, &struct_attributes, &field_data);
     let file_impl = file::generate_from_file(name, &struct_attributes);
@@ -117,7 +117,7 @@ pub(crate) fn parse_config_field_attributes(
                                 ..
                             }) = &named_value.value
                             {
-                                attributes.path = path.value();
+                                attributes.path = Some(path.value());
                             } else {
                                 errors.push(Error::new_spanned(
                                     named_value.into_token_stream(),
@@ -200,7 +200,7 @@ pub(crate) fn get_ident_from_type(ty: &Type) -> proc_macro2::Ident {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub(crate) struct ConfigAttributes {
     skip: bool,
     nest: bool,
@@ -208,21 +208,7 @@ pub(crate) struct ConfigAttributes {
     key: Option<String>,
     separator: Option<String>,
     secret: bool,
-    path: String,
-}
-
-impl Default for ConfigAttributes {
-    fn default() -> Self {
-        Self {
-            skip: false,
-            nest: false,
-            prefix: None,
-            key: None,
-            separator: None,
-            secret: false,
-            path: "config.toml".to_string(),
-        }
-    }
+    path: Option<String>,
 }
 
 impl ConfigAttributes {

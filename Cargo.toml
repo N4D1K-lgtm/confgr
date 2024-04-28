@@ -16,12 +16,12 @@ homepage = "https://github.com/N4D1K-lgtm/confgr"
 confgr_derive = { path = "crates/confgr_derive", version = "0.1.1" }
 confgr_core = { path = "crates/confgr_core", version = "0.1.1" }
 config = "0.14.0"
-serde = { version = "1.0.199", features = ["derive"] }
 
 
 [dev-dependencies]
 dotenv = "0.15.0"
 smart-default = "0.7.1"
+serde = { version = "1.0.199", features = ["derive"] }
 
 [workspace]
 members = ["crates/*"]
