@@ -15,8 +15,5 @@ proc-macro = true
 
 [dependencies]
 proc-macro2 = "1.0"
-serde = { version = "1.0.198", features = ["derive"] }
 syn = { version = "2.0.60", features = ["full"] }
-config = { version = "0.14.0", features = ["toml"] }
 quote = "1.0"
-confgr_core = { path = "../confgr_core/", version = "0.1.1" }

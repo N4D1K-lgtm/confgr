@@ -57,7 +57,7 @@ pub fn generate_from_env(
             quote! { #field_name: #nested_builder::from_env() }
         } else {
             quote! {
-               #field_name: match std::env::var(#env_var_name) {
+               #field_name: match ::std::env::var(#env_var_name) {
                     Ok(val) => {
                         val.parse::<#ty>().ok()
                     },
@@ -70,7 +70,7 @@ pub fn generate_from_env(
     });
 
     quote! {
-        impl ::confgr_core::FromEnv for #layer_name {
+        impl ::confgr::core::FromEnv for #layer_name {
             fn from_env() -> Self {
                 Self {
                     #( #env_items ),*

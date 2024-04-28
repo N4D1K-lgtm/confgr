@@ -31,32 +31,31 @@ pub fn generate_layer(
     );
 
     quote! {
-            #[derive(::serde::Deserialize, Debug, Clone)]
-            pub struct #layer_name {
-                #( #field_defs ),*
-            }
+        #[derive(::serde::Deserialize, Debug, Clone)]
+        pub struct #layer_name {
+            #( #field_defs ),*
+        }
 
-            impl Default for #layer_name {
-        fn default() -> Self {
+        impl Default for #layer_name {
+           fn default() -> Self {
             #name::default().into()
+            }
+        }
+
+        impl ::confgr::core::Merge for #layer_name {
+            fn merge(self, other: Self) -> Self {
+                Self {
+                    #( #merges ),*
+                }
+            }
+        }
+
+        impl ::confgr::core::Empty for #layer_name {
+            fn empty() -> Self {
+               Self {
+                #( #empty_defs ),*
+               }
+            }
         }
     }
-
-            impl ::confgr_core::Merge for #layer_name {
-                fn merge(self, other: Self) -> Self {
-                    Self {
-                        #( #merges ),*
-                    }
-                }
-            }
-
-            impl ::confgr_core::Empty for #layer_name {
-                fn empty() -> Self {
-                Self {
-                    #( #empty_defs ),*
-                }
-            }
-
-            }
-        }
 }

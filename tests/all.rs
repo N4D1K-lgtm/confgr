@@ -1,7 +1,7 @@
 use confgr::prelude::*;
 use smart_default::SmartDefault;
 
-#[derive(Config, Clone, SmartDefault)]
+#[derive(Confgr, Clone, SmartDefault)]
 #[config(prefix = "PREFIX", path = "tests/config")]
 pub struct Test {
     #[config(key = "CUSTOM_KEY")]
@@ -27,12 +27,12 @@ pub struct Test {
     unused_field: Option<String>,
 }
 
-#[derive(Config, Default, Clone)]
+#[derive(Confgr, Default, Clone)]
 pub struct Nested {
     name: String,
 }
 
-#[derive(Config, Default, Clone)]
+#[derive(Confgr, Default, Clone)]
 #[config(prefix = "META", separator = "__")]
 pub struct Metadata {
     description: String,
@@ -43,7 +43,7 @@ pub struct Metadata {
 fn main() {
     dotenv::from_path("tests/test.env").ok();
 
-    let config = Test::config();
+    let config = Test::load_config();
 
     assert_eq!(config.name, "World");
     assert_eq!(config.id, 10);

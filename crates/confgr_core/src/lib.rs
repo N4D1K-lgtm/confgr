@@ -13,7 +13,7 @@ pub trait FromFile: Sized {
     fn from_file() -> Result<Self, String>;
 }
 
-pub trait Config {
+pub trait Load {
     type Layer: Default + FromEnv + Merge + FromFile;
-    fn config() -> Self;
+    fn load_config() -> Self;
 }
