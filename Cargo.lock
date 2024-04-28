@@ -57,11 +57,11 @@ dependencies = [
 
 [[package]]
 name = "confgr_core"
-version = "0.1.1"
+version = "0.1.2"
 
 [[package]]
 name = "confgr_derive"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "proc-macro2",
  "quote",

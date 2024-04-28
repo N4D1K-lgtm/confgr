@@ -13,8 +13,8 @@ categories = ["config", "rust-patterns", "development-tools"]
 homepage = "https://github.com/N4D1K-lgtm/confgr"
 
 [dependencies]
-confgr_derive = { path = "crates/confgr_derive", version = "0.1.1" }
-confgr_core = { path = "crates/confgr_core", version = "0.1.1" }
+confgr_derive = { path = "crates/confgr_derive", version = "0.1.2" }
+confgr_core = { path = "crates/confgr_core", version = "0.1.2" }
 config = "0.14.0"
 
 
@@ -27,7 +27,7 @@ serde = { version = "1.0.199", features = ["derive"] }
 members = ["crates/*"]
 
 [workspace.package]
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 license = "MIT"
 repository = "https://github.com/N4D1K-lgtm/confgr"
