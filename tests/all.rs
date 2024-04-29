@@ -182,4 +182,31 @@ mod tests {
         assert_eq!(config.id, 0);
         assert_eq!(config.nested.detail, "");
     }
+
+    #[test]
+    fn check_file_fail() {
+        assert!(TestPriority::check_file().is_err());
+    }
+
+    #[test]
+    fn get_empty_file_path() {
+        assert_eq!(TestPriority::get_file_path(), "");
+    }
+
+    #[test]
+    fn check_file_success() {
+        let toml_data = r#"
+            name = "TomlName"
+            id = 30
+            timeout = 400
+        "#;
+        create_config_file(toml_data, "tests/config.toml");
+        assert!(TomlTestPriority::check_file().is_ok());
+        std::fs::remove_file("tests/config.toml").unwrap();
+    }
+
+    #[test]
+    fn get_file_path() {
+        assert_eq!(TomlTestPriority::get_file_path(), "tests/config.toml");
+    }
 }

@@ -17,10 +17,8 @@ confgr_derive = { path = "crates/confgr_derive", version = "0.1.2" }
 confgr_core = { path = "crates/confgr_core", version = "0.1.2" }
 config = "0.14.0"
 
-
 [dev-dependencies]
 dotenv = "0.15.0"
-smart-default = "0.7.1"
 serde = { version = "1.0.199", features = ["derive"] }
 
 [workspace]
@@ -31,7 +29,11 @@ version = "0.1.2"
 edition = "2021"
 license = "MIT"
 repository = "https://github.com/N4D1K-lgtm/confgr"
-authors = ["Kidan Nelson <nelsonkidan@gmail.com>"]
-documentation = "https://docs.rs/confgr"
-readme = "README.md"
 homepage = "https://github.com/N4D1K-lgtm/confgr"
+authors = ["Kidan Nelson <nelsonkidan@gmail.com>"]
+readme = "README.md"
+
+[workspace.dependencies]
+config = "0.14.0"
+serde = { version = "1.0.199", features = ["derive"] }
+thiserror = "1.0.59"

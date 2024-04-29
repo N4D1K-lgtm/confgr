@@ -49,7 +49,7 @@ pub fn generate_from_env(
             );
         }
 
-        if attr.skip {
+        if attr.skip || struct_attributes.skip {
             quote! { #field_name: None }
         } else if attr.nest {
             let ty_ident = get_ident_from_type(ty);
@@ -57,16 +57,50 @@ pub fn generate_from_env(
             quote! { #field_name: #nested_builder::from_env() }
         } else {
             quote! {
-               #field_name: match ::std::env::var(#env_var_name) {
-                    Ok(val) => {
-                        val.parse::<#ty>().ok()
-                    },
-                    Err(_) => {
-                        None
-                    }
+                #field_name: match ::std::env::var(#env_var_name) {
+                    Ok(val) => val.parse::<#ty>().ok(),
+                    Err(_) => None
                 }
             }
         }
+    });
+
+    let env_keys = field_data.iter().map(|(field_name, _, attr)| {
+        let mut env_var_name = field_name.to_string().to_uppercase();
+
+        if let Some(ref key) = attr.key {
+            env_var_name = key.clone().to_uppercase();
+        } else if attr.prefix.is_some() || struct_attributes.prefix.is_some() {
+            let separator = attr
+                .separator
+                .as_ref()
+                .unwrap_or(
+                    struct_attributes
+                        .separator
+                        .as_ref()
+                        .unwrap_or(&String::from(DEFAULT_SEPARATOR)),
+                )
+                .clone();
+
+            let prefix = attr
+                .prefix
+                .as_ref()
+                .unwrap_or(
+                    struct_attributes
+                        .prefix
+                        .as_ref()
+                        .unwrap_or(&String::from(DEFAULT_PREFIX)),
+                )
+                .to_uppercase();
+
+            env_var_name = format!(
+                "{}{}{}",
+                prefix,
+                separator,
+                field_name.to_string().to_uppercase()
+            );
+        }
+        quote! { stringify!(#field_name).to_string(), #env_var_name.to_string() }
     });
 
     quote! {
@@ -76,6 +110,14 @@ pub fn generate_from_env(
                     #( #env_items ),*
                 }
             }
+
+             fn get_env_keys() -> ::std::collections::HashMap<String, String> {
+                 let mut map = ::std::collections::HashMap::new();
+                 #(
+                     map.insert(#env_keys);
+                 )*
+                 map
+             }
         }
     }
 }

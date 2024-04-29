@@ -52,24 +52,25 @@
 
 The order of priority is Environment Variable -> Config File -> Default Value. If a `config(path = "filepath")` attribute is not present, a config file will not be loaded, and `config(skip)` may be used to skip the environment variable step.
 
-| Attribute      | Functionality                                                                                                                              |
-|----------------|--------------------------------------------------------------------------------------------------------------------------------------------|
-| prefix         | Sets the prefix for environment variables, can be set at the struct or field level.                                                        |
-| path           | Specifies the path to the configuration file, the extension may be omitted.                                                                |
-| key            | Overrides the default key name for an attribute, ignores the prefix and field name.                                                        |
-| nest           | Necessary for non standard types, these must also derive `Config`                                                                          |
-| skip           | Skips loading the attribute from an environment variable.                                                                                  |
-| separator      | Sets the separator character that is placed between the prefix and the field name, can be set at the struct or field level, default is "_" |
-
+| Attribute | Functionality                                                                                                                               |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| prefix    | Sets the prefix for environment variables, can be set at the struct or field level.                                                         |
+| path      | Specifies the path to the configuration file, the extension may be omitted.                                                                 |
+| key       | Overrides the default key name for an attribute, ignores the prefix and field name.                                                         |
+| nest      | Necessary for non standard types, these must also derive `Config`                                                                           |
+| skip      | Skips loading the attribute from an environment variable.                                                                                   |
+| separator | Sets the separator character that is placed between the prefix and the field name, can be set at the struct or field level, default is "\_" |
 
 ## Key Features
 
 - **Simplicity**: Minimal boilerplate, as simple as annotating your struct and a struct with named fields and a single method.
 - **Flexibility**: Supports loading configuration data from environment variables, a single `toml`, `json`, `yaml`, `xml`, `ini`, `ron` or `json5` configuration file with default trait implementations as a fall-back.
 - **Integration**: Integrates conveniently with other macros such as [`smart_default`](https://docs.rs/smart-default/latest/smart_default/derive.SmartDefault.html).
+
 ## Usage
 
-The simplest way to use `confgr` is as follows: 
+The simplest way to use `confgr` is as follows:
+
 ```rust
 use confgr::prelude::*;
 
@@ -108,6 +109,7 @@ fn main() {
 This is intended to easily be used inside of something like [`std::sync::OnceLock`](https://doc.rust-lang.org/nightly/std/sync/struct.OnceLock.html)
 
 ## Considerations
+
 - **Version Flexibility**: This is an initial release (v0.1.0), and as such, it is not fully optimized. The implementation involves some cloning for simplicity, which may impact performance in large-scale applications.
 - **Production Use Caution**: This is my first published Rust crate, while it is fully functional and useful for me, it's advisable not to rely heavily on this library in critical production environments without thorough testing, especially where guarantees of stability and performance are required.
 - **Contribution**: Contributions are welcome! Whether it's feature requests, bug reports, or pull requests, i'd love some constructive feedback!

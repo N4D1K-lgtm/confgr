@@ -32,6 +32,7 @@ pub fn generate_layer(
 
     quote! {
         #[derive(::serde::Deserialize, Debug, Clone)]
+        #[doc(hidden)]
         pub struct #layer_name {
             #( #field_defs ),*
         }

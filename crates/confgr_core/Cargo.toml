@@ -1,6 +1,7 @@
 [package]
 description = "A collection of traits used by the confgr derive macro"
 name = "confgr_core"
+documentation = "https://docs.rs/confgr_core"
 readme.workspace = true
 license.workspace = true
 authors.workspace = true
@@ -8,3 +9,8 @@ version.workspace = true
 edition.workspace = true
 repository.workspace = true
 homepage.workspace = true
+
+[dependencies]
+thiserror = { workspace = true }
+config = { workspace = true }
+serde = { workspace = true }
