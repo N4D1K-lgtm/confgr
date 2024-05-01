@@ -9,17 +9,17 @@ struct AppConfig {
     url: String,
     port: u32,
     enabled: bool,
-    #[config(nest)]
-    db_ignored: DbIgnored,
+    #[config(nest, name = "db")]
+    database: DatabaseConfig,
 }
 
 #[derive(Config, Default, Debug)]
-struct DbIgnored {
+struct DatabaseConfig {
     #[config(skip)]
     host: String,
     #[config(skip)]
     username: String,
-    #[config(skip)]
+    #[config(skip, name = "secret")]
     password: String,
 }
 
@@ -29,10 +29,10 @@ fn setup_simple_config_file() {
         port = 8080
         enabled = true
 
-        [db_ignored]
+        [db]
         host = "localhost"
         username = "admin"
-        password = "securepass"
+        secret = "securepass"
         "#;
 
     let mut settings_file = File::create("tests/simple_settings.toml").unwrap();
@@ -44,7 +44,7 @@ fn cleanup_simple_config_files() {
 }
 
 #[test]
-fn test_app_config_loads_correctly() {
+fn test_simple_config() {
     setup_simple_config_file();
 
     let config = AppConfig::load_config();
@@ -54,7 +54,7 @@ fn test_app_config_loads_correctly() {
     assert_eq!(config.port, 8080);
     assert!(config.enabled);
 
-    assert_eq!(config.db_ignored.password, "securepass");
+    assert_eq!(config.database.password, "securepass");
 
     cleanup_simple_config_files();
 }

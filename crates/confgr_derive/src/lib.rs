@@ -175,15 +175,15 @@ pub(crate) fn parse_config_field_attributes(
                             if named_value.path.is_ident(ENV_PATH_ATTRIBUTE) =>
                         {
                             if let Expr::Lit(ExprLit {
-                                lit: Lit::Str(path_env),
+                                lit: Lit::Str(env_path),
                                 ..
                             }) = &named_value.value
                             {
-                                attributes.path_env = Some(path_env.value());
+                                attributes.env_path = Some(env_path.value());
                             } else {
                                 errors.push(Error::new_spanned(
                                     named_value.into_token_stream(),
-                                    "Expected a string for 'path_env'",
+                                    "Expected a string for 'env_path'",
                                 ));
                             }
                         }
@@ -255,7 +255,7 @@ pub(crate) struct ConfigAttributes {
     key: Option<String>,
     separator: Option<String>,
     path: Option<String>,
-    path_env: Option<String>,
+    env_path: Option<String>,
     default_path: Option<String>,
     name: Option<String>,
 }

@@ -7,6 +7,7 @@ pub fn generate_config_impl(name: &Ident) -> TokenStream {
     let layer_name = format_ident!("{}{}", name, SUFFIX);
 
     quote! {
+        #[automatically_derived]
         impl ::confgr::core::Confgr for #name {
             type Layer = #layer_name;
         }

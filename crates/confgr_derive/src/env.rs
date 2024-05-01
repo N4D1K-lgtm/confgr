@@ -104,6 +104,7 @@ pub fn generate_from_env(
     });
 
     quote! {
+        #[automatically_derived]
         impl ::confgr::core::FromEnv for #layer_name {
             fn from_env() -> Self {
                 Self {

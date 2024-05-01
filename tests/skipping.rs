@@ -9,7 +9,7 @@ pub struct SkipTest {
 }
 
 #[test]
-fn skipped() {
+fn test_skipped() {
     std::env::set_var("SKIP_IGNORED", "true");
     let config = SkipTest::load_config();
 

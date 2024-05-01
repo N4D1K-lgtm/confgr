@@ -1,7 +1,7 @@
 [package]
 description = "A simple rust application configuration derive macro."
 name = "confgr"
-version = "0.1.1"
+version = "0.2.0"
 edition = "2021"
 license = "MIT"
 repository = "https://github.com/N4D1K-lgtm/confgr"
@@ -13,8 +13,8 @@ categories = ["config", "rust-patterns", "development-tools"]
 homepage = "https://github.com/N4D1K-lgtm/confgr"
 
 [dependencies]
-confgr_derive = { path = "crates/confgr_derive", version = "0.1.2" }
-confgr_core = { path = "crates/confgr_core", version = "0.1.2" }
+confgr_derive = { path = "crates/confgr_derive", version = "0.2.0" }
+confgr_core = { path = "crates/confgr_core", version = "0.2.0" }
 config = "0.14.0"
 
 [dev-dependencies]
@@ -27,7 +27,7 @@ tempfile = "3.10.1"
 members = ["crates/*"]
 
 [workspace.package]
-version = "0.1.2"
+version = "0.2.0"
 edition = "2021"
 license = "MIT"
 repository = "https://github.com/N4D1K-lgtm/confgr"

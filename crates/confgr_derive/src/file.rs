@@ -10,17 +10,17 @@ pub(crate) fn generate_from_file(name: &Ident, attributes: &ConfigAttributes) ->
         panic!("'path' and 'default_path' attributes cannot be used alongside eachother");
     }
 
-    let get_file_path_def = if let Some(path_env) = &attributes.path_env {
+    let get_file_path_def = if let Some(env_path) = &attributes.env_path {
         match (&attributes.path, &attributes.default_path) {
             (Some(path), None) => {
                 quote! {
                     fn get_file_path() -> Option<String> {
-                        match std::env::var(#path_env) {
+                        match std::env::var(#env_path) {
                             Ok(env_val) => if std::path::Path::new(&env_val).exists() { Some(env_val) }
                                            else if std::path::Path::new(#path).exists() { Some(#path.to_string()) }
-                                           else { panic!("'path_env' and 'path' attributes resolve to non-existent or invalid files.") },
+                                           else { panic!("'env_path' and 'path' attributes resolve to non-existent or invalid files.") },
                             Err(_) => if std::path::Path::new(#path).exists() { Some(#path.to_string()) }
-                                      else { panic!("'path_env' variable is not set and the provided 'path' attribute is invalid or references a non-existent file.") }
+                                      else { panic!("'env_path' variable is not set and the provided 'path' attribute is invalid or references a non-existent file.") }
                         }
                     }
                 }
@@ -28,7 +28,7 @@ pub(crate) fn generate_from_file(name: &Ident, attributes: &ConfigAttributes) ->
             (None, Some(default_path)) => {
                 quote! {
                     fn get_file_path() -> Option<String> {
-                        match std::env::var(#path_env) {
+                        match std::env::var(#env_path) {
                             Ok(env_val) => if std::path::Path::new(&env_val).exists() { Some(env_val) }
                                            else if std::path::Path::new(#default_path).exists() { Some(#default_path.to_string()) }
                                            else { None },
@@ -41,7 +41,7 @@ pub(crate) fn generate_from_file(name: &Ident, attributes: &ConfigAttributes) ->
             _ => {
                 quote! {
                     fn get_file_path() -> Option<String> {
-                        std::env::var(#path_env)
+                        std::env::var(#env_path)
                             .map(|env_val| {
                                 if std::path::Path::new(&env_val).exists() {
                                     Some(env_val)
@@ -82,6 +82,7 @@ pub(crate) fn generate_from_file(name: &Ident, attributes: &ConfigAttributes) ->
     };
 
     quote! {
+        #[automatically_derived]
         impl ::confgr::core::FromFile for #layer_name {
             #get_file_path_def
 

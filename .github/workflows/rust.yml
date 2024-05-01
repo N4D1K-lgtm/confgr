@@ -1,7 +1,14 @@
 ---
 name: Rust
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+      - dev
 
 jobs:
   format:
@@ -10,7 +17,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Install stable components
         uses: actions-rs/toolchain@v1
@@ -31,7 +38,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Install stable components
         uses: actions-rs/toolchain@v1
@@ -46,34 +53,13 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           args: --verbose --release -- -D warnings
 
-  wasm:
-    name: Check (wasm)
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Install WASM target
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          override: true
-          target: wasm32-unknown-unknown
-
-      - name: Check for WASM
-        uses: actions-rs/cargo@v1
-        with:
-          command: check
-          args: --verbose --release --target wasm32-unknown-unknown
-
   test:
     name: Test
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Install stable toolchain
         uses: actions-rs/toolchain@v1
@@ -85,7 +71,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: test
-          args: --verbose
+          args: --verbose -- --test-threads=1
 
   bench:
     name: Benchmark
@@ -93,7 +79,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Install stable toolchain
         uses: actions-rs/toolchain@v1

@@ -42,6 +42,7 @@ pub fn generate_conversion_impl(
     });
 
     quote! {
+        #[automatically_derived]
         impl ::core::convert::From<#layer_name> for #name {
             fn from(#LAYER_PARAMETER: #layer_name) -> Self {
                 Self {
@@ -50,6 +51,7 @@ pub fn generate_conversion_impl(
             }
         }
 
+        #[automatically_derived]
         impl ::core::convert::From<#name> for #layer_name {
             fn from(#BASE_PARAMETER: #name) -> Self {
                 Self {

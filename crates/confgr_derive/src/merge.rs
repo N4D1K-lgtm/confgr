@@ -56,6 +56,7 @@ pub fn generate_layer(
     );
 
     quote! {
+        #[automatically_derived]
         #[derive(::serde::Deserialize, Debug, Clone)]
         #[doc(hidden)]
         #struct_rename
@@ -63,12 +64,14 @@ pub fn generate_layer(
             #( #field_defs ),*
         }
 
+        #[automatically_derived]
         impl Default for #layer_name {
            fn default() -> Self {
             #name::default().into()
             }
         }
 
+        #[automatically_derived]
         impl ::confgr::core::Merge for #layer_name {
             fn merge(self, other: Self) -> Self {
                 Self {
@@ -77,6 +80,7 @@ pub fn generate_layer(
             }
         }
 
+        #[automatically_derived]
         impl ::confgr::core::Empty for #layer_name {
             fn empty() -> Self {
                Self {
@@ -86,4 +90,3 @@ pub fn generate_layer(
         }
     }
 }
-

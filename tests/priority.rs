@@ -69,7 +69,7 @@ fn cleanup_config_file() {
 }
 
 #[test]
-fn env_overrides_config_and_default() {
+fn test_env_overrides_config_and_default() {
     setup_env_vars();
     create_config_file();
 
@@ -83,7 +83,7 @@ fn env_overrides_config_and_default() {
 }
 
 #[test]
-fn file_overrides_default() {
+fn test_file_overrides_default() {
     cleanup_env_vars();
     create_config_file();
 
@@ -96,7 +96,7 @@ fn file_overrides_default() {
 }
 
 #[test]
-fn default_without_config() {
+fn test_default_without_config() {
     cleanup_env_vars();
     cleanup_config_file();
 
@@ -107,7 +107,7 @@ fn default_without_config() {
 }
 
 #[test]
-fn skip_env_with_file() {
+fn test_skip_env_with_file() {
     setup_env_vars();
     create_config_file();
 

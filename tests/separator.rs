@@ -11,7 +11,7 @@ pub struct SeparatorTest {
 }
 
 #[test]
-fn custom_separator() {
+fn test_custom_separator() {
     std::env::set_var("TEST__FIELD_SEP", "field_sep");
     std::env::set_var("TEST_sep_STRUCT_SEP", "struct_sep");
 
