@@ -52,65 +52,43 @@
 
 The order of priority is Environment Variable -> Config File -> Default Value. If a `config(path = "filepath")` attribute is not present, a config file will not be loaded, and `config(skip)` may be used to skip the environment variable step.
 
-| Attribute      | Functionality                                                                                                                              |
-|----------------|--------------------------------------------------------------------------------------------------------------------------------------------|
-| prefix         | Sets the prefix for environment variables, can be set at the struct or field level.                                                        |
-| path           | Specifies the path to the configuration file, the extension may be omitted.                                                                |
-| key            | Overrides the default key name for an attribute, ignores the prefix and field name.                                                        |
-| nest           | Necessary for non standard types, these must also derive `Config`                                                                          |
-| skip           | Skips loading the attribute from an environment variable.                                                                                  |
-| separator      | Sets the separator character that is placed between the prefix and the field name, can be set at the struct or field level, default is "_" |
-
+| Attribute | Functionality                                                                                                                               |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| prefix    | Sets the prefix for environment variables, can be set at the struct or field level.                                                         |
+| path      | Specifies the path to the configuration file, the extension may be omitted.                                                                 |
+| key       | Overrides the default key name for an attribute, ignores the prefix and field name.                                                         |
+| nest      | Necessary for non standard types, these must also derive `Config`                                                                           |
+| skip      | Skips loading the attribute from an environment variable.                                                                                   |
+| separator | Sets the separator character that is placed between the prefix and the field name, can be set at the struct or field level, default is "\_" |
 
 ## Key Features
 
 - **Simplicity**: Minimal boilerplate, as simple as annotating your struct and a struct with named fields and a single method.
 - **Flexibility**: Supports loading configuration data from environment variables, a single `toml`, `json`, `yaml`, `xml`, `ini`, `ron` or `json5` configuration file with default trait implementations as a fall-back.
 - **Integration**: Integrates conveniently with other macros such as [`smart_default`](https://docs.rs/smart-default/latest/smart_default/derive.SmartDefault.html).
+
 ## Usage
 
-Here's a complete example with all the currently implemented attributes. First define a configuration struct that the derive macro will fill from specified sources:
+The simplest way to use `confgr` is as follows:
 
 ```rust
 use confgr::prelude::*;
-use smart_default::SmartDefault;
 
-#[derive(Config, Clone, SmartDefault)]
-#[config(prefix = "PREFIX", path = "tests/config")]
-pub struct Test {
-    #[config(key = "CUSTOM_KEY")]
-    #[default = "World"]
-    name: String,
-    #[config(prefix = "APP")]
-    #[default = 3]
-    id: i32,
-    #[config(nest)]
-    nested: Nested,
-    #[config(key = "TIMEOUT_MS")]
-    #[default = 1000]
-    timeout: u64,
-    #[config(key = "FEATURE_ENABLED")]
-    #[default = false]
-    feature_enabled: bool,
-    #[default = 1.5]
-    ratio: f64,
-    #[config(nest)]
-    metadata: Metadata,
-    #[config(skip)]
-    #[default(Some("Unused".to_string()))]
-    unused_field: Option<String>,
+#[derive(Config)]
+#[config(path = "config.toml")]
+pub struct AppConfig {
+  port: u32,
+  address: String,
 }
 
-#[derive(Config, Default, Clone)]
-pub struct Nested {
-    name: String,
-}
-
-#[derive(Config, Default, Clone)]
-#[config(prefix = "META", separator = "__")]
-pub struct Metadata {
-    description: String,
-    version: i32,
+// Default implementations are required.
+impl Default for AppConfig {
+  fn default() -> Self {
+    Self {
+      port: 3000,
+      address: "127.0.0.1".to_string(),
+    }
+  }
 }
 ```
 
@@ -118,13 +96,20 @@ Then you can load your settings like so:
 
 ```rust
 fn main() {
-   let settings = Test::config();
+  std::env::set_var("PORT", "4000");
+
+  // AppConfig {
+  //  port: 4000,
+  //  address: "127.0.0.1"
+  // }
+  let settings = AppConfig::load_config();
 }
 ```
 
 This is intended to easily be used inside of something like [`std::sync::OnceLock`](https://doc.rust-lang.org/nightly/std/sync/struct.OnceLock.html)
 
 ## Considerations
+
 - **Version Flexibility**: This is an initial release (v0.1.0), and as such, it is not fully optimized. The implementation involves some cloning for simplicity, which may impact performance in large-scale applications.
 - **Production Use Caution**: This is my first published Rust crate, while it is fully functional and useful for me, it's advisable not to rely heavily on this library in critical production environments without thorough testing, especially where guarantees of stability and performance are required.
 - **Contribution**: Contributions are welcome! Whether it's feature requests, bug reports, or pull requests, i'd love some constructive feedback!

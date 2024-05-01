@@ -1,6 +1,7 @@
 [package]
 name = "confgr_derive"
 description = "Procedural derive macro implementation for the confgr crate"
+documentation = "https://docs.rs/confgr_derive"
 readme.workspace = true
 authors.workspace = true
 version.workspace = true
@@ -9,14 +10,10 @@ repository.workspace = true
 homepage.workspace = true
 license.workspace = true
 
-
 [lib]
 proc-macro = true
 
 [dependencies]
 proc-macro2 = "1.0"
-serde = { version = "1.0.198", features = ["derive"] }
 syn = { version = "2.0.60", features = ["full"] }
-config = { version = "0.14.0", features = ["toml"] }
 quote = "1.0"
-confgr_core = { path = "../confgr_core/", version = "0.1.1" }

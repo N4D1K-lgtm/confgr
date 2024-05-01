@@ -13,12 +13,14 @@ mod merge;
 const SUFFIX: &str = "ConfgrLayer";
 const AUTOCONF_ATTRIBUTE: &str = "config";
 const PATH_ATTRIBUTE: &str = "path";
+const DEFAULT_PATH_ATTRIBUTE: &str = "default_path";
+const ENV_PATH_ATTRIBUTE: &str = "env_path";
 const KEY_ATTRIBUTE: &str = "key";
 const PREFIX_ATTRIBUTE: &str = "prefix";
 const SEPARATOR_ATTRIBUTE: &str = "separator";
 const NEST_ATTRIBUTE: &str = "nest";
 const SKIP_ATTRIBUTE: &str = "skip";
-const SECRET_ATTRIBUTE: &str = "secret";
+const NAME_ATTRIBUTE: &str = "name";
 
 #[proc_macro_derive(Config, attributes(config))]
 pub fn config_derive(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
@@ -36,7 +38,7 @@ fn impl_config_derive(ast: &DeriveInput) -> Result<proc_macro2::TokenStream, Vec
 
     let field_data = extract_fields(ast)?;
 
-    let layer_impl = merge::generate_layer(name, &field_data);
+    let layer_impl = merge::generate_layer(name, &struct_attributes, &field_data);
     let config_impl = config::generate_config_impl(name);
     let from_impl = convert::generate_conversion_impl(name, &field_data);
     let env_impl = env::generate_from_env(name, &struct_attributes, &field_data);
@@ -106,9 +108,6 @@ pub(crate) fn parse_config_field_attributes(
                     match meta {
                         Meta::Path(path) if path.is_ident(SKIP_ATTRIBUTE) => attributes.skip = true,
                         Meta::Path(path) if path.is_ident(NEST_ATTRIBUTE) => attributes.nest = true,
-                        Meta::Path(path) if path.is_ident(SECRET_ATTRIBUTE) => {
-                            attributes.secret = true
-                        }
                         Meta::NameValue(named_value)
                             if named_value.path.is_ident(PATH_ATTRIBUTE) =>
                         {
@@ -117,7 +116,7 @@ pub(crate) fn parse_config_field_attributes(
                                 ..
                             }) = &named_value.value
                             {
-                                attributes.path = path.value();
+                                attributes.path = Some(path.value());
                             } else {
                                 errors.push(Error::new_spanned(
                                     named_value.into_token_stream(),
@@ -172,6 +171,54 @@ pub(crate) fn parse_config_field_attributes(
                                 ));
                             }
                         }
+                        Meta::NameValue(named_value)
+                            if named_value.path.is_ident(ENV_PATH_ATTRIBUTE) =>
+                        {
+                            if let Expr::Lit(ExprLit {
+                                lit: Lit::Str(path_env),
+                                ..
+                            }) = &named_value.value
+                            {
+                                attributes.path_env = Some(path_env.value());
+                            } else {
+                                errors.push(Error::new_spanned(
+                                    named_value.into_token_stream(),
+                                    "Expected a string for 'path_env'",
+                                ));
+                            }
+                        }
+                        Meta::NameValue(named_value)
+                            if named_value.path.is_ident(DEFAULT_PATH_ATTRIBUTE) =>
+                        {
+                            if let Expr::Lit(ExprLit {
+                                lit: Lit::Str(default_path),
+                                ..
+                            }) = &named_value.value
+                            {
+                                attributes.default_path = Some(default_path.value());
+                            } else {
+                                errors.push(Error::new_spanned(
+                                    named_value.into_token_stream(),
+                                    "Expected a string for 'default_path'",
+                                ));
+                            }
+                        }
+                        Meta::NameValue(named_value)
+                            if named_value.path.is_ident(NAME_ATTRIBUTE) =>
+                        {
+                            if let Expr::Lit(ExprLit {
+                                lit: Lit::Str(name),
+                                ..
+                            }) = &named_value.value
+                            {
+                                attributes.name = Some(name.value());
+                            } else {
+                                errors.push(Error::new_spanned(
+                                    named_value.into_token_stream(),
+                                    "Expected a string for 'name'",
+                                ));
+                            }
+                        }
                         _ => {
                             errors.push(Error::new_spanned(
                                 meta.into_token_stream(),
@@ -200,29 +247,17 @@ pub(crate) fn get_ident_from_type(ty: &Type) -> proc_macro2::Ident {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub(crate) struct ConfigAttributes {
     skip: bool,
     nest: bool,
     prefix: Option<String>,
     key: Option<String>,
     separator: Option<String>,
-    secret: bool,
-    path: String,
-}
-
-impl Default for ConfigAttributes {
-    fn default() -> Self {
-        Self {
-            skip: false,
-            nest: false,
-            prefix: None,
-            key: None,
-            separator: None,
-            secret: false,
-            path: "config.toml".to_string(),
-        }
-    }
+    path: Option<String>,
+    path_env: Option<String>,
+    default_path: Option<String>,
+    name: Option<String>,
 }
 
 impl ConfigAttributes {
