@@ -1,7 +1,7 @@
 <h1 align="center">Confgr</h1>
 <div align="center">
  <strong>
-  A simple rust application configuration derive macro.
+  A lightweight rust application configuration derive macro.
  </strong>
 </div>
 
@@ -43,13 +43,13 @@
 <br />
 
 <div align="center">
-  <small>Built with ❤️ by Kidan Nelson</small>
+  <small>Built with ❤️ by Ki</small>
 </div>
 
 # Overview
 
 The [`Config`](https://docs.rs/confgr/latest/confgr/prelude/derive.Config.html) derive macro simplifies application configuration by automatically loading
-settings from various sources in the following order:
+settings from sources in the following order:
 
 1.  **Environment Variables**.
 2.  **Configuration File** (e.g., `toml`, `json`, `yaml`, `ini`, `ron`, `json5`).
@@ -77,7 +77,7 @@ There are also several useful helper attributes for customizing the behavior of 
 
 ## Path Attribute Behavior
 
-- **`env_path`**: Resolves the provided environment variable into configuration filepath. This
+- **`env_path`**: Resolves the provided environment variable into a config filepath. This
   takes precedence over `path` and `default_path`, but will not panic if the file or environment
   does not exist.
 - **`path`**: Directly sets the path to the configuration file. When set, `default_path` may not be used. Panics if the file does not exist.
@@ -135,12 +135,12 @@ assert!(settings.debug)
 - Nested structs do not load separate files based on their own `path` attributes. If
   you would like multiple files to be loaded, you must use multiple structs with multiple
   [`load_config()`](<core::Confgr::load_config()>) calls. This may change in a future version.
-- Types that do not implement [`FromStr`](std::str::FromStr) must use `#[config(skip)]` or `#[config(nest)]`.
+- Types that do not implement [`FromStr`](https://doc.rust-lang.org/std/str/trait.FromStr.html) must use `#[config(skip)]` or `#[config(nest)]`.
 - The `separator` character is only inserted between the prefix and the field name, not in any
   part of the parsed field name.
 - The `prefix` is applied per field or for the entire struct, but is ignored if `#[config(key = "_")]` is used.
 - All configuration structs must implement [`Default`](https://doc.rust-lang.org/std/default/trait.Default.html).
-- Types used in configuration structs must implement [`Deserialize`](https://docs.rs/serde/latest/serde/trait.Deserialize.html),
+- Custom types used in configuration struct fields must implement [`Deserialize`](https://docs.rs/serde/latest/serde/trait.Deserialize.html),
   [`Clone`](https://doc.rust-lang.org/std/clone/trait.Clone.html),
   [`Debug`](https://doc.rust-lang.org/std/fmt/trait.Debug.html) and
   [`Default`](https://doc.rust-lang.org/std/default/trait.Default.html).
@@ -153,8 +153,8 @@ When encountering issues using the macro, the following methods may be of use.
 
 ### Verifying Environment Variables
 
-The [`get_env_keys()`](core::Confgr::get_env_keys) method can be used to retrieve the
-resolved environment variable keys based on the struct's configuration.
+The [`get_env_keys()`](https://docs.rs/confgr/latest/confgr/core/trait.Confgr.html#method.get_env_keys) method can be used to retrieve the
+environment variable key names built by the derive macro.
 
 ```rust
 use std::collections::HashMap;
@@ -179,8 +179,8 @@ assert_eq!(keys["debug"], "DEBUG_MODE");
 
 ### Verifying Configuration File Path
 
-You can use [`check_file()`](core::Confgr::check_file) to ensure that the configuration file
-is accessible the path specified or resolved in the `path`, or `env_path` or `default_path` attributes.
+You can use [`check_file()`](https://docs.rs/confgr/latest/confgr/core/trait.Confgr.html#method.check_file) to ensure that the configuration file
+is accessible using the provided `path`, `path_env` or `default_path` attributes.
 
 ```rust
 use confgr::prelude::*;
@@ -202,8 +202,8 @@ AppConfig::check_file().expect("Failed to open configuration file.");
 
 ### Test Deserialization
 
-The [`deserialize_from_file()`](<core::Confgr::deserialize_from_file()>) method can be used to manually test the config deserialization step. This
-will give you the parsed configuration struct before default values are applied.
+The [`deserialize_from_file()`](https://docs.rs/confgr/latest/confgr/core/trait.Confgr.html#method.deserialize_from_file) method can be used to manually test the config deserialization step. Returns
+a `Result<Self::Layer, ConfgrError>`.
 
 ```rust
 use confgr::prelude::\*;
