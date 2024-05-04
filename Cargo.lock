@@ -45,7 +45,7 @@ checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
 name = "confgr"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "confgr_core",
  "confgr_derive",
@@ -58,7 +58,7 @@ dependencies = [
 
 [[package]]
 name = "confgr_core"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "config",
  "serde",
@@ -67,7 +67,7 @@ dependencies = [
 
 [[package]]
 name = "confgr_derive"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "proc-macro2",
  "quote",
