@@ -31,4 +31,3 @@ fn test_non_default_foreign_type_is_valid() {
     let config = TestConfig::load_config();
     assert_eq!(config.foreign_type.value, "default_value");
 }
-
