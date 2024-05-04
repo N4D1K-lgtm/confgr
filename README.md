@@ -141,9 +141,8 @@ assert!(settings.debug)
 - The `prefix` is applied per field or for the entire struct, but is ignored if `#[config(key = "_")]` is used.
 - All configuration structs must implement [`Default`](https://doc.rust-lang.org/std/default/trait.Default.html).
 - Custom types used in configuration struct fields must implement [`Deserialize`](https://docs.rs/serde/latest/serde/trait.Deserialize.html),
-  [`Clone`](https://doc.rust-lang.org/std/clone/trait.Clone.html),
-  [`Debug`](https://doc.rust-lang.org/std/fmt/trait.Debug.html) and
-  [`Default`](https://doc.rust-lang.org/std/default/trait.Default.html).
+  [`Clone`](https://doc.rust-lang.org/std/clone/trait.Clone.html), and
+  [`Debug`](https://doc.rust-lang.org/std/fmt/trait.Debug.html).
 - [`Option`](https://doc.rust-lang.org/std/option/enum.Option.html) is not currently compatible with `#[config(nest)]`
   on types that implement [`Confgr`](https://docs.rs/confgr/latest/confgr/core/trait.Confgr.html).
 

@@ -22,7 +22,7 @@ pub fn generate_conversion_impl(
             }
         } else {
             quote! {
-                #field_name: #LAYER_PARAMETER.#field_name.unwrap_or_default(),
+                #field_name: #LAYER_PARAMETER.#field_name.unwrap_or_else(|| #name::default().#field_name),
             }
         }
     });
