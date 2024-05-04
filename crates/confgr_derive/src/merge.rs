@@ -67,7 +67,9 @@ pub fn generate_layer(
         #[automatically_derived]
         impl Default for #layer_name {
            fn default() -> Self {
-            #name::default().into()
+                #name {
+                    ..::core::default::Default::default()
+                }.into()
             }
         }
 
